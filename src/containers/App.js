@@ -79,7 +79,7 @@ class App extends Component {
 
     return (
       <div>
-        <h1>Players</h1>
+        <h1>Soccer Players</h1>
         {competitionId ? this.playerView() : this.competitionPicker()}
       </div>
     );
