@@ -1,5 +1,7 @@
+const apiUrl = "http://soccer-players.us-east-2.elasticbeanstalk.com";
+
 export function getPlayers(id) {
-  let url = `http://ferret:8001/api/competitions/${id}/players`;
+  let url = `${apiUrl}/api/competitions/${id}/players`;
   return fetch(url, {method: 'GET',
                      headers: new Headers({'Accept': 'application/json'})})
     .then(response => {
