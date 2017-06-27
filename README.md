@@ -2,6 +2,8 @@
 
 A frontend for a webapp.
 
+This is my first time using [Redux](https://github.com/reactjs/redux). I used [this example](https://github.com/reactjs/redux/tree/master/examples/async) as a starting point.
+
 ## Copyright and License
 
 The use and distribution terms for this software are covered by the
