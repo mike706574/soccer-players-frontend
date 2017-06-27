@@ -3,9 +3,15 @@ export function getPlayers(id) {
   return fetch(url, {method: 'GET',
                      headers: new Headers({'Accept': 'application/json'})})
     .then(response => {
-      return new Promise((resolve) => {
-        resolve(response.json());;
-      });
-    })
-    .catch(response => console.log("Error!"));
+      if(response.ok) {
+        return new Promise((resolve) => {
+          resolve(response.json());
+        });
+      }
+      else {
+        return new Promise((resolve, reject) => {
+          reject(response);
+        });
+      }
+    });
 }

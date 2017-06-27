@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { changeCompetition, changeNameFilter, fetchPlayersIfNeeded } from '../actions';
+import { changeCompetition, changeNameFilter } from '../actions';
 import BootstrapSelect from '../components/BootstrapSelect';
 import BootstrapTextBox from '../components/BootstrapTextBox';
 import Players from '../components/Players';
@@ -13,18 +13,12 @@ const competitions = [{value: '426', description: "Premier League 2016/17"},
 
 class App extends Component {
   static propTypes = {
+    error: PropTypes.object,
     competitionId: PropTypes.string.isRequired,
     nameFilter: PropTypes.string.isRequired,
     players: PropTypes.array.isRequired,
     isFetching: PropTypes.bool.isRequired,
     dispatch: PropTypes.func.isRequired
-  }
-
-  componentWillReceiveProps(nextProps) {
-    if (nextProps.term !== this.props.term) {
-      const { dispatch, term } = nextProps;
-      dispatch(fetchPlayersIfNeeded(term));
-    }
   }
 
   handleNameFilterChange = nextNameFilter => {
@@ -65,27 +59,38 @@ class App extends Component {
     );
   }
 
-  render() {
-    let content;
+  errorView(error) {
+    console.log('Error:');
+    console.log(error);
+    return (
+      <div>
+        <h1>Error!</h1>
+        <pre>An error occurred. It has been logged to the console.</pre>
+      </div>
+    );
+  }
 
-    if(this.props.competitionId) {
-      content = this.playerView();
-    }
-    else {
-      content = this.competitionPicker();
+  render() {
+    const {error, competitionId} = this.props;
+
+    if(error) {
+      return this.errorView(this.props.error);
     }
 
     return (
       <div>
         <h1>Players</h1>
-        {content}
+        {competitionId ? this.playerView() : this.competitionPicker()}
       </div>
     );
   }
 }
 
 const mapStateToProps = state => {
-  const {competitionId, nameFilter, playersByCompetition} = state;
+  const {error, competitionId, nameFilter, playersByCompetition} = state;
+  if(error) {
+    return {...state, players: [], isFetching: false};
+  }
   if(!competitionId) {
     return {competitionId, nameFilter, isFetching: false, players: []};
   }
@@ -94,6 +99,6 @@ const mapStateToProps = state => {
     players = filterAndSort(players, 'nameWithoutDiacritics', 'nameWithoutDiacritics', nameFilter);
   }
   return {competitionId, nameFilter, players, isFetching};
-}
+};
 
 export default connect(mapStateToProps)(App);

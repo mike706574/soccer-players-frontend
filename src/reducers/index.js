@@ -3,8 +3,21 @@ import {
   CHANGE_NAME_FILTER,
   CHANGE_COMPETITION,
   REQUEST_PLAYERS,
-  RECEIVE_PLAYERS
+  RECEIVE_PLAYERS,
+  SET_ERROR,
+  RESET_ERROR
 } from '../actions';
+
+export const error = (state = null, action) => {
+  switch(action.type) {
+    case SET_ERROR:
+      return action.error;
+    case RESET_ERROR:
+      return null;
+    default:
+      return state;
+  }
+};
 
 export const competitionId = (state = '', action) => {
   switch(action.type) {
@@ -48,7 +61,8 @@ export const playersByCompetition = (state = {}, action) => {
   }
 };
 
-const rootReducer = combineReducers({competitionId,
+const rootReducer = combineReducers({error,
+                                     competitionId,
                                      nameFilter,
                                      playersByCompetition});
 
