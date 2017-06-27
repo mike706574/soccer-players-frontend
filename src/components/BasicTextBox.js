@@ -1,12 +1,13 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-const BasicTextBox = ({ value, onChange }) => (
-  <span>
-    <input type='text'
-           value={value}
-           onChange={e => onChange(e.target.value)}/>
-  </span>
+const BasicTextBox = ({ id, label, value, onChange }) => (
+  <div>
+    <label htmlFor={id}>{label}</label>
+    <input id={id}
+           type='text'
+           onChange={e => onChange(e.target.value)} />
+  </div>
 );
 
 BasicTextBox.propTypes = {

@@ -28,8 +28,7 @@ export const requestPlayers = competitionId => ({
 export const receivePlayers = (competitionId, players) => ({
   type: RECEIVE_PLAYERS,
   competitionId,
-  players: players,
-  receivedAt: Date.now()
+  players: players
 });
 
 const fetchPlayers = competitionId => dispatch => {
@@ -37,12 +36,8 @@ const fetchPlayers = competitionId => dispatch => {
     .then(players => dispatch(receivePlayers(competitionId, players)));
 };
 
-const shouldFetchPlayers = (state, competitionId) => {
-  return !state.playersByCompetition[competitionId];
-};
-
 export const fetchPlayersIfNeeded = competitionId => (dispatch, getState) => {
-  if(shouldFetchPlayers(getState(), competitionId)) {
+  if(!getState().playersByCompetition[competitionId]) {
     return dispatch(fetchPlayers(competitionId));
   }
 };

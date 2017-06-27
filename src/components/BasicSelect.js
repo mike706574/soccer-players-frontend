@@ -10,7 +10,7 @@ const BasicSelect = props => {
 
   return (
     <select value={value}
-       onChange={e => onChange(e.target.value)}>
+            onChange={e => onChange(e.target.value)}>
       <option></option>
       {optionElements}
     </select>

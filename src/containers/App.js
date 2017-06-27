@@ -2,11 +2,14 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { changeCompetition, changeNameFilter, fetchPlayersIfNeeded } from '../actions';
-import BasicTextBox from '../components/BasicTextBox';
-import BasicSelect from '../components/BasicSelect';
+import BootstrapSelect from '../components/BootstrapSelect';
+import BootstrapTextBox from '../components/BootstrapTextBox';
 import Players from '../components/Players';
+import {filterAndSort} from '../transform';
 
-const competitions = [{value: '445', description: 'Premier League'}];
+const competitions = [{value: '426', description: "Premier League 2016/17"},
+                      {value: '436', description: "Primera Division 2016/17"},
+                      {value: '430', description: "1. Bundesliga 2016/17"}];
 
 class App extends Component {
   static propTypes = {
@@ -34,27 +37,30 @@ class App extends Component {
 
   competitionPicker() {
      return (
-       <BasicSelect value={this.props.competitionId}
-                    options={competitions}
-                    onChange={this.handleCompetitionChange} />
+       <BootstrapSelect id='competition'
+                        label='Competition'
+                        value={this.props.competitionId}
+                        options={competitions}
+                        onChange={this.handleCompetitionChange} />
      );
   }
 
   playerView() {
-    const competitionId = this.props.competitionId;
-    const competition = competitions.find(competition => competition.value === competitionId);
     const isFetching = this.props.isFetching;
-    console.log( "FETCHING?" + isFetching);
     return (
       <div>
-        {this.competitionPicker()}
-        <h3>{competition.description}</h3>
-        <h5>Players</h5>
-        <BasicTextBox value={this.props.nameFilter}
-                      onChange={this.handleNameFilterChange}  />
-        {this.props.isFetching
-          ? <p>Loading...</p>
-          : <Players players={this.props.players}/>}
+        <form>
+          {this.competitionPicker()}
+          <BootstrapTextBox id='name-filter'
+                            label='Name'
+                            value={this.props.nameFilter}
+                            placeholder=''
+                            onChange={this.handleNameFilterChange} />
+        </form>
+        {isFetching
+         ? <i className='fa fa-circle-o-notch fa-spin'
+                style={{fontSize: '48px'}}></i>
+         : <Players players={this.props.players}/>}
       </div>
     );
   }
@@ -70,31 +76,12 @@ class App extends Component {
     }
 
     return (
-      <div className='container'>
-        <div className='row'>
-          <div className='col-xs-12'>
-            {content}
-          </div>
-        </div>
+      <div>
+        <h1>Players</h1>
+        {content}
       </div>
-  );
+    );
   }
-}
-
-function searchableName(player) {
-  return player['name-without-diacritics'];
-}
-
-function comparePlayers(a, b) {
-  const aName = searchableName(a);
-  const bName = searchableName(b);
-  if (aName < bName) {
-    return -1;
-  }
-  if (aName > bName) {
-    return 1;
-  }
-  return 0;
 }
 
 const mapStateToProps = state => {
@@ -103,11 +90,9 @@ const mapStateToProps = state => {
     return {competitionId, nameFilter, isFetching: false, players: []};
   }
   let {isFetching, players} = playersByCompetition[competitionId] || {isFetching: false, players: []};
-  if(nameFilter !== '') {
-    players = players
-      .filter(player => searchableName(player).match(new RegExp(nameFilter, 'i')));
+  if(!isFetching) {
+    players = filterAndSort(players, 'nameWithoutDiacritics', 'nameWithoutDiacritics', nameFilter);
   }
-  players.sort(comparePlayers);
   return {competitionId, nameFilter, players, isFetching};
 }
 
