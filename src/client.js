@@ -1,3 +1,5 @@
+import fetch from 'isomorphic-fetch';
+
 const apiUrl = "http://soccer-players.us-east-2.elasticbeanstalk.com";
 
 export function getPlayers(id) {

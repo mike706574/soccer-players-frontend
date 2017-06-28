@@ -4,12 +4,18 @@ import { connect } from 'react-redux';
 import { changeCompetition, changeNameFilter } from '../actions';
 import BootstrapSelect from '../components/BootstrapSelect';
 import BootstrapTextBox from '../components/BootstrapTextBox';
+import Error from '../components/Error';
 import Players from '../components/Players';
-import {filterAndSort} from '../transform';
+import * as transform from '../transform';
 
 const competitions = [{value: '426', description: "Premier League 2016/17"},
                       {value: '436', description: "Primera Division 2016/17"},
                       {value: '430', description: "1. Bundesliga 2016/17"}];
+
+const spinner = (
+  <i className='fa fa-circle-o-notch fa-spin'
+     style={{fontSize: '48px'}}></i>
+);
 
 class App extends Component {
   static propTypes = {
@@ -35,12 +41,24 @@ class App extends Component {
                         label='Competition'
                         value={this.props.competitionId}
                         options={competitions}
-                        onChange={this.handleCompetitionChange} />
+                        onChange={this.handleCompetitionChange}
+                        placeholder='Please select a competition.' />
      );
   }
 
   playerView() {
     const isFetching = this.props.isFetching;
+
+    let content = spinner;
+
+    if(!isFetching) {
+      content = (
+        <Players players={this.props.players}
+                 pageNumber={this.props.pageNumber}
+                 dispatch={this.props.dispatch}/>
+      );
+    }
+
     return (
       <div>
         <form>
@@ -48,24 +66,10 @@ class App extends Component {
           <BootstrapTextBox id='name-filter'
                             label='Name'
                             value={this.props.nameFilter}
-                            placeholder=''
+                            placeholder='Type here to filter players by name.'
                             onChange={this.handleNameFilterChange} />
         </form>
-        {isFetching
-         ? <i className='fa fa-circle-o-notch fa-spin'
-                style={{fontSize: '48px'}}></i>
-         : <Players players={this.props.players}/>}
-      </div>
-    );
-  }
-
-  errorView(error) {
-    console.log('Error:');
-    console.log(error);
-    return (
-      <div>
-        <h1>Error!</h1>
-        <pre>An error occurred. It has been logged to the console.</pre>
+        {content}
       </div>
     );
   }
@@ -74,7 +78,7 @@ class App extends Component {
     const {error, competitionId} = this.props;
 
     if(error) {
-      return this.errorView(this.props.error);
+      return <Error error={this.props.error} />;
     }
 
     return (
@@ -87,18 +91,18 @@ class App extends Component {
 }
 
 const mapStateToProps = state => {
-  const {error, competitionId, nameFilter, playersByCompetition} = state;
-  if(error) {
-    return {...state, players: [], isFetching: false};
+  const {error, competitionId, isFetching} = state;
+  if(error || !competitionId || isFetching) {
+    return {...state, players: []};
   }
-  if(!competitionId) {
-    return {competitionId, nameFilter, isFetching: false, players: []};
-  }
-  let {isFetching, players} = playersByCompetition[competitionId] || {isFetching: false, players: []};
-  if(!isFetching) {
-    players = filterAndSort(players, 'nameWithoutDiacritics', 'nameWithoutDiacritics', nameFilter);
-  }
-  return {competitionId, nameFilter, players, isFetching};
+
+  const {playersByCompetition, nameFilter} = state,
+        players = playersByCompetition[competitionId],
+        filteredPlayers = transform.filterAndSort(players,
+                                                  'nameWithoutDiacritics',
+                                                  'nameWithoutDiacritics',
+                                                  nameFilter);
+  return {...state, players: filteredPlayers};
 };
 
 export default connect(mapStateToProps)(App);

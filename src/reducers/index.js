@@ -1,69 +1,40 @@
-import { combineReducers } from 'redux';
 import {
   CHANGE_NAME_FILTER,
   CHANGE_COMPETITION,
   REQUEST_PLAYERS,
   RECEIVE_PLAYERS,
   SET_ERROR,
-  RESET_ERROR
+  RESET_ERROR,
+  SHOW_PAGE
 } from '../actions';
 
-export const error = (state = null, action) => {
+const initialState = {competitionId: '',
+                      nameFilter: '',
+                      isFetching: false,
+                      playersByCompetition: {},
+                      pageNumber: 1};
+
+const rootReducer = (state = initialState, action) => {
   switch(action.type) {
     case SET_ERROR:
-      return action.error;
+      return {...state, error: action.error};
     case RESET_ERROR:
-      return null;
-    default:
-      return state;
-  }
-};
-
-export const competitionId = (state = '', action) => {
-  switch(action.type) {
+      return {...state, error: null};
     case CHANGE_COMPETITION:
-      return action.competitionId;
-    default:
-      return state;
-  }
-};
-
-export const nameFilter = (state = '', action) => {
-  switch(action.type) {
-    case CHANGE_COMPETITION:
-      return '';
+      return {...state, competitionId: action.competitionId, nameFilter: '', pageNumber: 1};
     case CHANGE_NAME_FILTER:
-      return action.nameFilter;
-    default:
-      return state;
-  }
-};
-
-const players = (state = {isFetching: false, players: []}, action) => {
-  switch(action.type) {
+      return {...state, nameFilter: action.nameFilter, pageNumber: 1};
     case REQUEST_PLAYERS:
       return {...state, isFetching: true};
     case RECEIVE_PLAYERS:
-      return {...state, isFetching: false, players: action.players};
+      const updatedPlayersByCompetition = {...state.playersByCompetition,
+                                           [action.competitionId]: action.players};
+      return {...state, playersByCompetition: updatedPlayersByCompetition, isFetching: false};
+    case SHOW_PAGE:
+      return {...state, pageNumber: action.pageNumber};
     default:
       return state;
   }
 };
-
-export const playersByCompetition = (state = {}, action) => {
-  switch(action.type) {
-    case RECEIVE_PLAYERS:
-    case REQUEST_PLAYERS:
-      return {...state,
-              [action.competitionId]: players(state[action.competitionId], action)};
-    default:
-      return state;
-  }
-};
-
-const rootReducer = combineReducers({error,
-                                     competitionId,
-                                     nameFilter,
-                                     playersByCompetition});
 
 export default rootReducer;
