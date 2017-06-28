@@ -8,11 +8,12 @@ import {
   SHOW_PAGE
 } from '../actions';
 
-const initialState = {competitionId: '',
-                      nameFilter: '',
-                      isFetching: false,
-                      playersByCompetition: {},
-                      pageNumber: 1};
+export const initialState = {competitionId: '',
+                             nameFilter: '',
+                             isFetching: false,
+                             playersByCompetition: {},
+                             pageNumber: 1,
+                             error: null};
 
 const rootReducer = (state = initialState, action) => {
   switch(action.type) {
