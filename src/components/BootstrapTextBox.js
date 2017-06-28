@@ -5,13 +5,13 @@ import { FormGroup, FormControl, ControlLabel } from 'react-bootstrap';
 const BootstrapTextBox = props => {
   const { id, label, value, placeholder, onChange } = props;
   return (
-     <FormGroup controlId={id}>
-       <ControlLabel>{label}</ControlLabel>
-       <FormControl type="text"
-                    value={value}
-                    placeholder={placeholder}
-                    onChange={e => onChange(e.target.value)} />
-     </FormGroup>
+    <FormGroup controlId={id}>
+      <ControlLabel>{label}</ControlLabel>
+      <FormControl type="text"
+                   value={value}
+                   placeholder={placeholder}
+                   onChange={e => onChange(e.target.value)} />
+    </FormGroup>
   );
 };
 

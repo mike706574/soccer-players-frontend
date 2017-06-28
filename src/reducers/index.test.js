@@ -1,9 +1,12 @@
 import { competitionId, nameFilter, playersByCompetition } from './index';
 
-import {CHANGE_NAME_FILTER, CHANGE_COMPETITION, REQUEST_PLAYERS, RECEIVE_PLAYERS} from '../actions';
+import {CHANGE_NAME_FILTER,
+        CHANGE_COMPETITION,
+        REQUEST_PLAYERS,
+        RECEIVE_PLAYERS} from '../actions';
 
 it('changes competition', () => {
-  const action = {type: CHANGE_COMPETITION, competitionId: '1'}
+  const action = {type: CHANGE_COMPETITION, competitionId: '1'};
   expect(competitionId('', {})) .toEqual('');
   expect(competitionId('', action)) .toEqual('1');
   expect(competitionId('2', action)).toEqual('1');
@@ -11,7 +14,7 @@ it('changes competition', () => {
 });
 
 it('changes name fiter', () => {
-  const action = {type: CHANGE_NAME_FILTER, nameFilter: 'foo'}
+  const action = {type: CHANGE_NAME_FILTER, nameFilter: 'foo'};
   expect(nameFilter('', {})) .toEqual('');
   expect(nameFilter('', action)) .toEqual('foo');
   expect(nameFilter('bar', action)).toEqual('foo');
@@ -39,12 +42,14 @@ it('receives players competition', () => {
     .toEqual({'1': {isFetching: false, players: [{'name': 'Bob'}]}});
 });
 
-it('already has players for one competition and receives players for another', () => {
-  const action = {type: RECEIVE_PLAYERS,
-                  competitionId: '1',
-                  players: [{'name': 'Bob'}]};
-  expect(playersByCompetition({'1': {isFetching: true, players: []},
-                               '2': {isFetching: false, players: [{'name': 'Dog'}]}}, action))
-    .toEqual({'1': {isFetching: false, players: [{'name': 'Bob'}]},
-              '2': {isFetching: false, players: [{'name': 'Dog'}]}});
-});
+it('already has players for a competition and receives players for another',
+   () => {
+     const action = {type: RECEIVE_PLAYERS,
+                     competitionId: '1',
+                     players: [{'name': 'Bob'}]};
+     expect(playersByCompetition({'1': {isFetching: true, players: []},
+                                  '2': {isFetching: false,
+                                        players: [{'name': 'Dog'}]}}, action))
+       .toEqual({'1': {isFetching: false, players: [{'name': 'Bob'}]},
+                 '2': {isFetching: false, players: [{'name': 'Dog'}]}});
+   });

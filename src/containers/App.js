@@ -36,14 +36,14 @@ class App extends Component {
   }
 
   competitionPicker() {
-     return (
-       <BootstrapSelect id='competition'
-                        label='Competition'
-                        value={this.props.competitionId}
-                        options={competitions}
-                        onChange={this.handleCompetitionChange}
-                        placeholder='Please select a competition.' />
-     );
+    return (
+      <BootstrapSelect id='competition'
+                       label='Competition'
+                       value={this.props.competitionId}
+                       options={competitions}
+                       onChange={this.handleCompetitionChange}
+                       placeholder='Please select a competition.' />
+    );
   }
 
   playerView() {

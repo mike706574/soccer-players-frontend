@@ -15,15 +15,15 @@ const BootstrapSelect = props => {
   }
 
   return (
-   <FormGroup controlId={id}>
-     <ControlLabel>{label}</ControlLabel>
-     <FormControl componentClass="select"
-                  value={value}
-                  onChange={e => onChange(e.target.value)}>
-       {defaultOption}
-       {optionElements}
-     </FormControl>
-   </FormGroup>
+    <FormGroup controlId={id}>
+      <ControlLabel>{label}</ControlLabel>
+      <FormControl componentClass="select"
+                   value={value}
+                   onChange={e => onChange(e.target.value)}>
+        {defaultOption}
+        {optionElements}
+      </FormControl>
+    </FormGroup>
   );
 };
 

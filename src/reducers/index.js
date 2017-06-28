@@ -16,24 +16,24 @@ const initialState = {competitionId: '',
 
 const rootReducer = (state = initialState, action) => {
   switch(action.type) {
-    case SET_ERROR:
-      return {...state, error: action.error};
-    case RESET_ERROR:
-      return {...state, error: null};
-    case CHANGE_COMPETITION:
-      return {...state, competitionId: action.competitionId, nameFilter: '', pageNumber: 1};
-    case CHANGE_NAME_FILTER:
-      return {...state, nameFilter: action.nameFilter, pageNumber: 1};
-    case REQUEST_PLAYERS:
-      return {...state, isFetching: true};
-    case RECEIVE_PLAYERS:
-      const updatedPlayersByCompetition = {...state.playersByCompetition,
-                                           [action.competitionId]: action.players};
-      return {...state, playersByCompetition: updatedPlayersByCompetition, isFetching: false};
-    case SHOW_PAGE:
-      return {...state, pageNumber: action.pageNumber};
-    default:
-      return state;
+  case SET_ERROR:
+    return {...state, error: action.error};
+  case RESET_ERROR:
+    return {...state, error: null};
+  case CHANGE_COMPETITION:
+    return {...state, competitionId: action.competitionId, nameFilter: '', pageNumber: 1};
+  case CHANGE_NAME_FILTER:
+    return {...state, nameFilter: action.nameFilter, pageNumber: 1};
+  case REQUEST_PLAYERS:
+    return {...state, isFetching: true};
+  case RECEIVE_PLAYERS:
+    const updatedPlayersByCompetition = {...state.playersByCompetition,
+                                         [action.competitionId]: action.players};
+    return {...state, playersByCompetition: updatedPlayersByCompetition, isFetching: false};
+  case SHOW_PAGE:
+    return {...state, pageNumber: action.pageNumber};
+  default:
+    return state;
   }
 };
 
