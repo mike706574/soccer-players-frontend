@@ -1,11 +1,15 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import { Pagination, Media } from 'react-bootstrap';
+import { Pagination, Media, Badge } from 'react-bootstrap';
 
 import { showPage } from '../actions';
 
 const pageSize = 10;
+
+const Label = ({name, value}) => {
+    return <p style={{margin: '0', fontSize: '12'}}><strong>{name}:</strong> {value}</p>;
+};
 
 const Players = props => {
   const {dispatch, players, pageNumber} = props,
@@ -25,8 +29,11 @@ const Players = props => {
                 <img width={64} height={64} src="http://via.placeholder.com/64x64" alt={player.name}/>
               </Media.Left>
               <Media.Body>
-                <Media.Heading>{player.name}</Media.Heading>
-                <p>{player.teamName}</p>
+                <h4 style={{marginTop: '4px', marginBottom: '4px'}}>
+                  {player.name} <Badge>{player.jerseyNumber}</Badge>
+                </h4>
+                <Label name='Team' value={player.teamName} />
+                <Label name='Position' value={player.position} />
               </Media.Body>
             </Media>
           );
